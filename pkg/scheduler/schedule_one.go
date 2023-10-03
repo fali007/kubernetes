@@ -670,6 +670,7 @@ func prioritizeNodes(
 	if !scoreStatus.IsSuccess() {
 		return nil, scoreStatus.AsError()
 	}
+	fmt.Printf("1: Plugin scores : %+v\n", nodesScores)
 
 	// Additional details logged at level 10 if enabled.
 	klogV := klog.V(10)
@@ -718,6 +719,7 @@ func prioritizeNodes(
 					// MaxExtenderPriority may diverge from the max priority used in the scheduler and defined by MaxNodeScore,
 					// therefore we need to scale the score returned by extenders to the score range used by the scheduler.
 					finalscore := score * weight * (framework.MaxNodeScore / extenderv1.MaxExtenderPriority)
+					fmt.Printf("2: Plugin scores of node %s final : %+v\n", nodename, finalscore)
 
 					if allNodeExtendersScores[nodename] == nil {
 						allNodeExtendersScores[nodename] = &framework.NodePluginScores{
@@ -748,6 +750,7 @@ func prioritizeNodes(
 			klogV.InfoS("Calculated node's final score for pod", "pod", klog.KObj(pod), "node", nodesScores[i].Name, "score", nodesScores[i].TotalScore)
 		}
 	}
+	fmt.Printf("3: Plugin scores : %+v\n", nodesScores)
 	return nodesScores, nil
 }
 
